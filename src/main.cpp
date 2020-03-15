@@ -74,12 +74,12 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void loop() {
+void process(uint8_t led[NUM_LEDS][NUM_CHANNELS]){
   int bit_count = 0;
-  for(int led = 0; led < NUM_LEDS; led++){
-    for(int col_channel = 0; col_channel < NUM_CHANNELS; col_channel++){
-      for(int bit = 0; bit < 8; bit++){
-        if(col_channel==3){
+  for(int led_num = 0; led_num < NUM_LEDS; led_num++){
+    for(int channel = 0; channel < NUM_CHANNELS; channel++){
+      for(int i = 0; i < 8; i++){
+        if(led[led_num][channel] >> 8*(7-i)){
           led_data[bit_count].level0 = 1;
           led_data[bit_count].duration0 = 6;
           led_data[bit_count].level1 = 0;
@@ -95,6 +95,20 @@ void loop() {
     }
   }
   rmtWrite(rmt_send, led_data, TOTAL_BITS);
+}
+
+
+
+void loop() {
+  uint8_t led[NUM_LEDS][NUM_CHANNELS];
+  for(int i = 0; i < NUM_LEDS; i++){
+    //this will turn on only the white leds at half brightness - note my strip wasn't in format rgbw
+    led[i][0] = 0;
+    led[i][1] = 0;
+    led[i][2] = 0;
+    led[i][3] = 128;
+  }
+  process(led);
   delay(90);
   ArduinoOTA.handle();
 }
