@@ -79,7 +79,7 @@ void process(uint8_t led[NUM_LEDS][NUM_CHANNELS]){
   for(int led_num = 0; led_num < NUM_LEDS; led_num++){
     for(int channel = 0; channel < NUM_CHANNELS; channel++){
       for(int i = 0; i < 8; i++){
-        if(led[led_num][channel] >> 8*(7-i)){
+        if(led[led_num][channel] >> (7-i)){
           led_data[bit_count].level0 = 1;
           led_data[bit_count].duration0 = 6;
           led_data[bit_count].level1 = 0;
@@ -106,7 +106,7 @@ void loop() {
     led[i][0] = 0;
     led[i][1] = 0;
     led[i][2] = 0;
-    led[i][3] = 128;
+    led[i][3] = 255;
   }
   process(led);
   delay(90);
